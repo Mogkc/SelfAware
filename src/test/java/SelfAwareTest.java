@@ -19,7 +19,7 @@ public class SelfAwareTest {
         } catch(Exception e) {
             assertEquals(true, true);
         }
-        assertEquals(25, a.occurrences(code) );
+        assertEquals(21, a.occurrences(code) );
     }
 
     @Test
@@ -28,3 +28,4 @@ public class SelfAwareTest {
         b.append(code,"\n//Visual check" );
     }
 }
+//Visual check

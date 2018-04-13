@@ -12,18 +12,14 @@ public class SelfAwareTest {
             + SelfAwareTest.class.getName().replace(".", File.separator) + ".java";
 
     @Test
-    public void occurencesTest() throws IOException {
+    public void occurencesTest() throws Exception {
         SelfAware a = new SelfAware();
         try {
             a.occurrences("invalid");
         } catch(Exception e) {
             assertEquals(true, true);
         }
-        try {
-            assertEquals(25, a.occurrences(code) );
-        } catch (Exception e) {
-            assertEquals(false, true);
-        }
+        assertEquals(25, a.occurrences(code) );
     }
 
     @Test
@@ -32,4 +28,3 @@ public class SelfAwareTest {
         b.append(code,"\n//Visual check" );
     }
 }
-//Visual check

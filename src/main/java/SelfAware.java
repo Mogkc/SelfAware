@@ -6,56 +6,53 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class SelfAware implements edu.gcccd.csis.Language {
+    private HashMap<Integer, HashMap> reserv;
 
     public int occurrences(String sourceFile) throws Exception {
         int occur = 0;
-        edu.gcccd.csis.Language.sort();
+        sorter();
         Scanner sa = new Scanner(new File(sourceFile) ).useDelimiter(
                 "\\s+|\\W");
         while (sa.hasNext()) {
-            String temp = sa.next();
-            int j = firstOfLength(temp.length());
-            while(j>-1 && j<ReservedWords.length) {
-                if (ReservedWords[j].equals(temp)) {
-                    occur++;
-                } else if (ReservedWords[j].length() != temp.length())
-                    break;
-                j++;
-            }
+            if (matches(sa.next()))
+                occur++;
         }
         sa.close();
         return occur;
     }
 
-    private int firstOfLength(int length) {
-        int min = 0, max = ReservedWords.length-1;
-        while (min <= max) {
-            int mid = (max+min)/2;
-            //If the right length is found, iterate back to the first then return it.
-            if (ReservedWords[mid].length() == length) {
-                return first(mid);
-            }
-            //Otherwise, adjust the boundaries, remembering longest first
-            if (ReservedWords[mid].length() > length) {
-                min = mid +1;
-            } else max = mid -1;
+    /*Sees if the length is keyed to a hashmap,
+    * if so checks words of that length for equality*/
+    private boolean matches(String in) {
+        HashMap<Integer, String> search = reserv.get((Integer) in.length());
+        if (search == null)
+            return false;
+        for (Integer x = 1; x < search.size(); x++) {
+            if (search.get(x).equals(in))
+                return true;
         }
-        //If there are none of the specified length,
-        return -1;
+        return false;
     }
 
-    private int first(int place) {
-        int length = ReservedWords[place].length();
-        //Decrease  place to the first reserved word of that length
-        while (true) {
-            if (place==0 || ReservedWords[place-1].length() != length)
-                break;
-            place--;
+    /*Places each reserved word in a hashmap of other words with its length,
+    * and keeps all of those hashmaps with the key to it being the length of words inside*/
+    void sorter() {
+        reserv = new HashMap<Integer, HashMap>();
+        for (String x : ReservedWords) {
+            Integer temp = x.length();
+
+            if(reserv.get(temp) != null) {
+                reserv.get(temp).put((Integer) reserv.get(temp).size(), x);
+            } else {
+                HashMap<Integer, String> created = new HashMap<Integer, String>();
+                created.put(0, x);
+                reserv.put(temp, created);
+            }
         }
-        return place;
     }
 
     public void append(String sourceFile, String message) throws IOException {

@@ -31,7 +31,7 @@ public class SelfAware implements edu.gcccd.csis.Language {
         HashMap<Integer, String> search = reserv.get((Integer) in.length());
         if (search == null)
             return false;
-        for (Integer x = 1; x < search.size(); x++) {
+        for (Integer x = 0; x < search.size(); x++) {
             if (search.get(x).equals(in))
                 return true;
         }
@@ -44,7 +44,6 @@ public class SelfAware implements edu.gcccd.csis.Language {
         reserv = new HashMap<Integer, HashMap>();
         for (String x : ReservedWords) {
             Integer temp = x.length();
-
             if(reserv.get(temp) != null) {
                 reserv.get(temp).put((Integer) reserv.get(temp).size(), x);
             } else {
